@@ -4,5 +4,5 @@ module com.sterndu.Util {
 	exports com.sterndu.util.exceptions;
 	exports com.sterndu.util.vector;
 
-	requires java.desktop;
+	requires transitive java.desktop;
 }
