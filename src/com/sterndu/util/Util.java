@@ -5,7 +5,19 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Util.
+ */
 public class Util {
+
+	/**
+	 * Equals.
+	 *
+	 * @param a the a
+	 * @param b the b
+	 * @return true, if successful
+	 */
 	public static boolean equals(List<?> a, List<?> b) {
 		for (int i=0;i<a.size();i++) {
 			Object o=a.get(i),o2=b.get(i);
@@ -24,6 +36,13 @@ public class Util {
 		return true;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param a the a
+	 * @param b the b
+	 * @return true, if successful
+	 */
 	public static boolean equals(Map<?,?> a, Map<?,?> b) {
 		Iterator<?> i = a.entrySet().iterator();
 		while (i.hasNext()) {
@@ -52,12 +71,29 @@ public class Util {
 		return true;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param a the a
+	 * @param b the b
+	 * @return true, if successful
+	 */
 	public static boolean equals(Object a, Object b) {
 		if (a instanceof List) return equals((List<?>)a, (List<?>)b);
-		else if (a instanceof Map) return equals((Map<?, ?>) a, (Map<?, ?>) b);
-		else return a.equals(b) & b.equals(a);
+		if (a instanceof Map) return equals((Map<?, ?>) a, (Map<?, ?>) b);
+		return a.equals(b) & b.equals(a);
 	}
 
+	/**
+	 * Gets the all objectsfrom iterablewith param.
+	 *
+	 * @param <E> the element type
+	 * @param <O> the generic type
+	 * @param list the list
+	 * @param f the f
+	 * @param o the o
+	 * @return the all objectsfrom iterablewith param
+	 */
 	public static <E, O> List<E> getAllObjectsfromIterablewithParam(Iterable<E> list, Function<E, O> f, O o) {
 		List<E> li = new ArrayList<>();
 		for (E e : list)
@@ -66,6 +102,16 @@ public class Util {
 		return li.size()>0?li:null;
 	}
 
+	/**
+	 * Gets the objectfrom iterablewith param.
+	 *
+	 * @param <E> the element type
+	 * @param <O> the generic type
+	 * @param list the list
+	 * @param f the f
+	 * @param o the o
+	 * @return the objectfrom iterablewith param
+	 */
 	public static <E, O> E getObjectfromIterablewithParam(Iterable<E> list, Function<E, O> f, O o) {
 		for (E e : list)
 			if (f.apply(e).equals(o))
@@ -73,6 +119,12 @@ public class Util {
 		return null;
 	}
 
+	/**
+	 * Gets the string stream.
+	 *
+	 * @param str the str
+	 * @return the string stream
+	 */
 	public static InputStream getStringStream(String str) {
 		try {
 			return new ByteArrayInputStream(str.getBytes("UTF-8"));
@@ -82,6 +134,15 @@ public class Util {
 		}
 	}
 
+	/**
+	 * Mapto string.
+	 *
+	 * @param <E> the element type
+	 * @param <T> the generic type
+	 * @param map the map
+	 * @param seperator the seperator
+	 * @return the string
+	 */
 	public static <E, T> String MaptoString(Map<E, T> map, char seperator) {
 		Set<E> set = map.keySet();
 		StringBuilder sb = new StringBuilder();
@@ -101,10 +162,23 @@ public class Util {
 		return sb.toString();
 	}
 
+	/**
+	 * Number to binary string.
+	 *
+	 * @param n the n
+	 * @return the string
+	 */
 	public static String numberToBinaryString(Number n) {
 		return numberToBinaryString(n, 0);
 	}
 
+	/**
+	 * Number to binary string.
+	 *
+	 * @param n the n
+	 * @param minlength the minlength
+	 * @return the string
+	 */
 	public static String numberToBinaryString(Number n, int minlength) {
 		char[] num = Long.toBinaryString(n.longValue()).toCharArray();
 		char[] chars = new char[Math.max(minlength, num.length)];
@@ -114,22 +188,51 @@ public class Util {
 		return new String(chars);
 	}
 
+	/**
+	 * Read X bytes.
+	 *
+	 * @param b the b
+	 * @param is the is
+	 * @param amount the amount
+	 * @return true, if successful
+	 */
 	public static boolean readXBytes(byte[] b,InputStream is,int amount) {
+		return readXBytes(b, is, amount, 1000l); }
+
+	/**
+	 * Read X bytes.
+	 *
+	 * @param b       the b
+	 * @param is      the is
+	 * @param amount  the amount
+	 * @param timeout the timeout
+	 *
+	 * @return true, if successful
+	 */
+	public static boolean readXBytes(byte[] b, InputStream is, int amount, long timeout) {
 		if (b.length < amount) return false;
 		if (amount == 0) return true;
 		long time = System.currentTimeMillis();
 		int written = 0;
-		while (System.currentTimeMillis() - time < 2000 && written < amount) try {
-			final int w = is.read(b, written, amount - written);
-			written += w;
-			if (w > 0) time = System.currentTimeMillis();
-			else written-=w;
+		while (System.currentTimeMillis() - time < timeout && written < amount) try {
+			if (is.available() > 0) {
+				final int w = is.read(b, written, Math.min(amount - written, is.available()));
+				written += w;
+				if (w > 0) time = System.currentTimeMillis();
+				else written-=w;
+			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 		return written >= amount;
 	}
 
+	/**
+	 * Sigmoid.
+	 *
+	 * @param x the x
+	 * @return the double
+	 */
 	public static Double Sigmoid(Double x) {
 		return 1 / (1 + Math.exp(-x));
 	}
