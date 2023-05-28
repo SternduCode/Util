@@ -99,7 +99,7 @@ public class Util {
 		for (E e : list)
 			if (f.apply(e).equals(o))
 				li.add(e);
-		return li.size()>0?li:null;
+		return li;
 	}
 
 	/**
