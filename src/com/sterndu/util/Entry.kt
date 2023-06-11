@@ -1,18 +1,12 @@
-package com.sterndu.util;
+@file:JvmName("Entry")
+package com.sterndu.util
 
-public class Entry<E, V> {
-
-	private final E	key;
-	private final V	value;
-
-	public Entry(E key, V value) {
-		this.key	= key;
-		this.value	= value;
-
+data class Entry<E, V>(val key: E, val value: V) {
+	fun key(): E {
+		return key
 	}
 
-	public E key() { return key; }
-
-	public V value() { return value; }
-
+	fun value(): V {
+		return value
+	}
 }

@@ -1,84 +1,56 @@
-package com.sterndu.util;
+@file:JvmName("PrintStreamwTimeStamps")
+package com.sterndu.util
 
-import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.File
+import java.io.OutputStream
+import java.io.PrintStream
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-public class PrintStreamwTimeStamps extends PrintStream {
+class PrintStreamwTimeStamps : PrintStream {
+	constructor(file: File?) : super(file)
+	constructor(file: File?, csn: String?) : super(file, csn)
+	constructor(out: OutputStream?) : super(out)
+	constructor(out: OutputStream?, autoFlush: Boolean) : super(out, autoFlush)
+	constructor(out: OutputStream?, autoFlush: Boolean, encoding: String?) : super(out, autoFlush, encoding)
+	constructor(fileName: String?) : super(fileName)
+	constructor(fileName: String?, csn: String?) : super(fileName, csn)
 
-	public PrintStreamwTimeStamps(File file) throws FileNotFoundException {
-		super(file);
+	private val prefix: String
+		private get() {
+			val ldt = LocalDateTime.now()
+			return "[" + ldt.format(DateTimeFormatter.ofPattern("HH:mm:ss.SSSS")) + "] "
+		}
+
+	override fun print(b: Boolean) {
+		super.print(prefix + b)
 	}
 
-	public PrintStreamwTimeStamps(File file, String csn) throws FileNotFoundException, UnsupportedEncodingException {
-		super(file, csn);
+	override fun print(c: Char) {
+		super.print(prefix + c)
 	}
 
-	public PrintStreamwTimeStamps(OutputStream out) {
-		super(out);
+	override fun print(obj: Double) {
+		super.print(prefix + obj)
 	}
 
-	public PrintStreamwTimeStamps(OutputStream out, boolean autoFlush) {
-		super(out, autoFlush);
+	override fun print(f: Float) {
+		super.print(prefix + f)
 	}
 
-	public PrintStreamwTimeStamps(OutputStream out, boolean autoFlush, String encoding)
-			throws UnsupportedEncodingException {
-		super(out, autoFlush, encoding);
+	override fun print(i: Int) {
+		super.print(prefix + i)
 	}
 
-	public PrintStreamwTimeStamps(String fileName) throws FileNotFoundException {
-		super(fileName);
+	override fun print(l: Long) {
+		super.print(prefix + l)
 	}
 
-	public PrintStreamwTimeStamps(String fileName, String csn)
-			throws FileNotFoundException, UnsupportedEncodingException {
-		super(fileName, csn);
+	override fun print(obj: Any) {
+		super.print(prefix + obj)
 	}
 
-	private String getPrefix() {
-		LocalDateTime ldt = LocalDateTime.now();
-		return "[" + ldt.format(DateTimeFormatter.ofPattern("HH:mm:ss.SSSS")) + "] ";
+	override fun print(s: String) {
+		super.print(prefix + s)
 	}
-
-	@Override
-	public void print(boolean b) {
-		super.print(getPrefix()+b);
-	}
-
-	@Override
-	public void print(char c) {
-		super.print(getPrefix() + c);
-	}
-
-	@Override
-	public void print(double obj) {
-		super.print(getPrefix() + obj);
-	}
-
-	@Override
-	public void print(float f) {
-		super.print(getPrefix() + f);
-	}
-
-	@Override
-	public void print(int i) {
-		super.print(getPrefix() + i);
-	}
-
-	@Override
-	public void print(long l) {
-		super.print(getPrefix() + l);
-	}
-
-	@Override
-	public void print(Object obj) {
-		super.print(getPrefix() + obj);
-	}
-
-	@Override
-	public void print(String s) {
-		super.print(getPrefix() + s);
-	}
-
 }

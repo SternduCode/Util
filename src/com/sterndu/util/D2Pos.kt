@@ -1,55 +1,27 @@
-package com.sterndu.util;
+@file:JvmName("D2Pos")
+package com.sterndu.util
 
-import java.util.Objects;
+import java.util.*
 
-public class D2Pos {
-	double x, y;
+class D2Pos(var x: Double, var y: Double) {
 
-	public D2Pos(double x, double y) {
-		this.x = x;
-		this.y = y;
-
+	fun distance(pos2: D2Pos): Double {
+		return Math.sqrt(Math.pow(pos2.x - x, 2.0) + Math.pow(pos2.y - y, 2.0))
 	}
 
-	public double distance(D2Pos pos2) {
-		return Math.sqrt(Math.pow(pos2.getX() - x, 2) + Math.pow(pos2.getY() - y, 2));
+	override fun equals(obj: Any?): Boolean {
+		if (this === obj) return true
+		if (obj !is D2Pos) return false
+		val other = obj
+		return (java.lang.Double.doubleToLongBits(x) == java.lang.Double.doubleToLongBits(other.x)
+				&& java.lang.Double.doubleToLongBits(y) == java.lang.Double.doubleToLongBits(other.y))
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof D2Pos))
-			return false;
-		D2Pos other = (D2Pos) obj;
-		return Double.doubleToLongBits(x) == Double.doubleToLongBits(other.x)
-				&& Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
+	override fun hashCode(): Int {
+		return Objects.hash(x, y)
 	}
 
-	public double getX() {
-		return x;
+	override fun toString(): String {
+		return "(x=$x|y=$y)"
 	}
-
-	public double getY() {
-		return y;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(x, y);
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	@Override
-	public String toString() {
-		return "(x=" + x + "|y=" + y + ")";
-	}
-
 }

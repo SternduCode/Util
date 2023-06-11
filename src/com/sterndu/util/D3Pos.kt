@@ -1,66 +1,35 @@
-package com.sterndu.util;
+@file:JvmName("D3Pos")
+package com.sterndu.util
 
-import java.util.Objects;
+import java.util.*
 
-public class D3Pos {
-	double x, y, z;
+class D3Pos(var x: Double, var y: Double, var z: Double) {
 
-	public D3Pos(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-
+	fun distance(pos2: D3Pos): Double {
+		return Math.sqrt(
+			Math.pow(pos2.x - x, 2.0) + Math.pow(pos2.y - y, 2.0) + Math.pow(
+				pos2.z - z, 2.0
+			)
+		)
 	}
 
-	public double distance(D3Pos pos2) {
-		return Math.sqrt(Math.pow(pos2.getX() - x, 2) + Math.pow(pos2.getY() - y, 2) + Math.pow(pos2.getZ() - z, 2));
+	override fun equals(obj: Any?): Boolean {
+		if (this === obj) return true
+		if (obj !is D3Pos) return false
+		val other = obj
+		return java.lang.Double.doubleToLongBits(x) == java.lang.Double.doubleToLongBits(other.x) && java.lang.Double.doubleToLongBits(
+			y
+		) == java.lang.Double.doubleToLongBits(other.y) && java.lang.Double.doubleToLongBits(z) == java.lang.Double.doubleToLongBits(
+			other.z
+		)
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof D3Pos))
-			return false;
-		D3Pos other = (D3Pos) obj;
-		return Double.doubleToLongBits(x) == Double.doubleToLongBits(other.x)
-				&& Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y)
-				&& Double.doubleToLongBits(z) == Double.doubleToLongBits(other.z);
+	override fun hashCode(): Int {
+		return Objects.hash(x, y, z)
 	}
 
-	public double getX() {
-		return x;
+	override fun toString(): String {
+		return ("D3Pos [x=" + x + ", y=" + y + ", z=" + z + ", hashCode()=" + hashCode() + ", getClass()="
+				+ this.javaClass + "]")
 	}
-
-	public double getY() {
-		return y;
-	}
-
-	public double getZ() {
-		return z;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(x, y, z);
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	public void setZ(double z) {
-		this.z = z;
-	}
-
-	@Override
-	public String toString() {
-		return "D3Pos [x=" + x + ", y=" + y + ", z=" + z + ", hashCode()=" + hashCode() + ", getClass()="
-				+ this.getClass() + "]";
-	}
-
 }

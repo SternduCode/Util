@@ -1,31 +1,14 @@
-package com.sterndu.util.exceptions;
+@file:JvmName("ClosedMemoryLocationException")
+package com.sterndu.util.exceptions
 
-public class ClosedMemoryLocationException extends Exception {
+class ClosedMemoryLocationException : Exception {
+	constructor()
+	constructor(message: String?) : super(message)
+	constructor(message: String?, cause: Throwable?) : super(message, cause)
+	constructor(
+		message: String?, cause: Throwable?, enableSuppression: Boolean,
+		writableStackTrace: Boolean
+	) : super(message, cause, enableSuppression, writableStackTrace)
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 4810813237605305525L;
-
-	public ClosedMemoryLocationException() {}
-
-	public ClosedMemoryLocationException(String message) {
-		super(message);
-	}
-
-	public ClosedMemoryLocationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public ClosedMemoryLocationException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public ClosedMemoryLocationException(Throwable cause) {
-		super(cause);
-	}
-
-
-
+	constructor(cause: Throwable?) : super(cause)
 }

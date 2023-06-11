@@ -1,50 +1,48 @@
-package com.sterndu.util;
+@file:JvmName("DataSplitter")
+package com.sterndu.util
 
-import java.util.*;
-import java.util.function.*;
+import java.util.function.Consumer
+import java.util.function.Function
 
-public class DataSplitter {
-
-	public static byte[] recive(Function<Consumer<byte[]>, Listener<byte[]>> recivemethod, String init){
-		String[] initsp = init.split("-");
-		int i = 0;
-		byte[] b = new byte[0];
-		try {
-			i = Integer.parseInt(initsp[1]);
-		} catch (NumberFormatException e) {
-			return init.getBytes();
+object DataSplitter {
+	fun recive(recivemethod: Function<Consumer<ByteArray>?, Listener<ByteArray?>?>, init: String): ByteArray {
+		val initsp = init.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+		var i = 0
+		var b = ByteArray(0)
+		i = try {
+			initsp[1].toInt()
+		} catch (e: NumberFormatException) {
+			return init.toByteArray()
 		}
-		List<byte[]> list = new ArrayList<>();
-		Wait u = new Wait();
-		Consumer<byte[]> c = t -> {
-			list.add(t);
-			u.Recived();
-		};
-		for (int j = 0; j < i; j++) {
-			recivemethod.apply(c);
-			u.waituntildataisrecived(50, null);
+		val list: MutableList<ByteArray> = ArrayList()
+		val u = Wait()
+		val c = Consumer<ByteArray> { t: ByteArray ->
+			list.add(t)
+			u.Recived()
 		}
-		for (byte[] element : list) {
-			byte[] b2 = new byte[element.length + b.length];
-			System.arraycopy(b, 0, b2, 0, b.length);
-			System.arraycopy(element, 0, b2, b.length, element.length);
-			b = b2;
+		for (j in 0 until i) {
+			recivemethod.apply(c)
+			u.waituntildataisrecived(50, null)
 		}
-		return b;
+		for (element in list) {
+			val b2 = ByteArray(element.size + b.size)
+			System.arraycopy(b, 0, b2, 0, b.size)
+			System.arraycopy(element, 0, b2, b.size, element.size)
+			b = b2
+		}
+		return b
 	}
 
-	public static void send(Consumer<byte[]> sendmethod, byte[] data){
-		int l = data.length;
-		int num = (int) Math.ceil(l/256d);
-		byte[][] b = new byte[num][256];
-		for (int i = 0; i < data.length; i++) {
-			int s = (int) Math.floor(i/256d);
-			b[s][i-s*256] = data[i];
+	fun send(sendmethod: Consumer<ByteArray?>, data: ByteArray) {
+		val l = data.size
+		val num = Math.ceil(l / 256.0).toInt()
+		val b = Array(num) { ByteArray(256) }
+		for (i in data.indices) {
+			val s = Math.floor(i / 256.0).toInt()
+			b[s][i - s * 256] = data[i]
 		}
-		String str = "Splitted-" + num;
-		sendmethod.accept(str.getBytes());
-		for (byte[] element : b)
-			sendmethod.accept(element);
+		val str = "Splitted-$num"
+		sendmethod.accept(str.toByteArray())
+		for (element in b) sendmethod.accept(element)
 	}
-
 }

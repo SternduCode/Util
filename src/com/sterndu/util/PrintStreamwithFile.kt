@@ -1,122 +1,106 @@
-package com.sterndu.util;
+@file:JvmName("PrintStreamwithFile")
+package com.sterndu.util
 
-import java.io.*;
+import java.io.*
 
-public class PrintStreamwithFile extends PrintStream {
+class PrintStreamwithFile : PrintStream {
+	private var bw: BufferedWriter? = null
+	private val f: File
 
-	private BufferedWriter bw;
-	private final File f;
-
-	public PrintStreamwithFile(File file, File f) throws FileNotFoundException {
-		super(file);
-		this.f = f;
-		init();
+	constructor(file: File?, f: File) : super(file) {
+		this.f = f
+		init()
 	}
 
-	public PrintStreamwithFile(File file, String csn, File f)
-			throws FileNotFoundException, UnsupportedEncodingException {
-		super(file, csn);
-		this.f = f;
-		init();
+	constructor(file: File?, csn: String?, f: File) : super(file, csn) {
+		this.f = f
+		init()
 	}
 
-	public PrintStreamwithFile(OutputStream out, boolean autoFlush, File f) {
-		super(out, autoFlush);
-		this.f = f;
-		init();
+	constructor(out: OutputStream?, autoFlush: Boolean, f: File) : super(out, autoFlush) {
+		this.f = f
+		init()
 	}
 
-	public PrintStreamwithFile(OutputStream out, boolean autoFlush, String encoding, File f)
-			throws UnsupportedEncodingException {
-		super(out, autoFlush, encoding);
-		this.f = f;
-		init();
+	constructor(out: OutputStream?, autoFlush: Boolean, encoding: String?, f: File) : super(out, autoFlush, encoding) {
+		this.f = f
+		init()
 	}
 
-	public PrintStreamwithFile(OutputStream out, File f) {
-		super(out);
-		this.f = f;
-		init();
+	constructor(out: OutputStream?, f: File) : super(out) {
+		this.f = f
+		init()
 	}
 
-	public PrintStreamwithFile(String str, File f) throws FileNotFoundException {
-		super(str);
-		this.f = f;
-		init();
+	constructor(str: String?, f: File) : super(str) {
+		this.f = f
+		init()
 	}
 
-	public PrintStreamwithFile(String fileName, String csn, File f) throws FileNotFoundException, UnsupportedEncodingException {
-		super(fileName, csn);
-		this.f = f;
-		init();
+	constructor(fileName: String?, csn: String?, f: File) : super(fileName, csn) {
+		this.f = f
+		init()
 	}
 
-	private void init() {
+	private fun init() {
 		try {
-			bw = new BufferedWriter(new FileWriter(f));
-		} catch (IOException e) {
-			e.printStackTrace();
+			bw = BufferedWriter(FileWriter(f))
+		} catch (e: IOException) {
+			e.printStackTrace()
 		}
 	}
 
-	@Override
-	public void close() {
-		super.close();
+	override fun close() {
+		super.close()
 		try {
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			bw!!.close()
+		} catch (e: IOException) {
+			e.printStackTrace()
 		}
 	}
 
-	@Override
-	public void flush() {
-		super.flush();
+	override fun flush() {
+		super.flush()
 		try {
-			bw.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+			bw!!.flush()
+		} catch (e: IOException) {
+			e.printStackTrace()
 		}
 	}
 
-	@Override
-	public void print(Object obj) {
-		super.print(obj);
+	override fun print(obj: Any) {
+		super.print(obj)
 		try {
-			bw.write("" + obj);
-		} catch (IOException e) {
-			e.printStackTrace();
+			bw!!.write("" + obj)
+		} catch (e: IOException) {
+			e.printStackTrace()
 		}
 	}
 
-	@Override
-	public void print(String s) {
-		super.print(s);
+	override fun print(s: String) {
+		super.print(s)
 		try {
-			bw.write(s);
-		} catch (IOException e) {
-			e.printStackTrace();
+			bw!!.write(s)
+		} catch (e: IOException) {
+			e.printStackTrace()
 		}
 	}
 
-	@Override
-	public void println(Object x) {
-		super.println(x);
+	override fun println(x: Any) {
+		super.println(x)
 		try {
-			bw.newLine();
-		} catch (IOException e) {
-			e.printStackTrace();
+			bw!!.newLine()
+		} catch (e: IOException) {
+			e.printStackTrace()
 		}
 	}
 
-	@Override
-	public void println(String x) {
-		super.println(x);
+	override fun println(x: String) {
+		super.println(x)
 		try {
-			bw.newLine();
-		} catch (IOException e) {
-			e.printStackTrace();
+			bw!!.newLine()
+		} catch (e: IOException) {
+			e.printStackTrace()
 		}
 	}
-
 }

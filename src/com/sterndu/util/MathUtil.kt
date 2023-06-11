@@ -1,23 +1,26 @@
-package com.sterndu.util;
+@file:JvmName("MathUtil")
+package com.sterndu.util
 
-import java.math.BigInteger;
+import java.math.BigInteger
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
-public class MathUtil {
-
-	public static int avg(int o, int r) {
-		double doi = o;
-		doi+=r;
-		doi/= 2;
-		return (int) Math.round(doi);
+object MathUtil {
+	fun avg(o: Int, r: Int): Int {
+		var doi = o.toDouble()
+		doi += r.toDouble()
+		doi /= 2.0
+		return doi.roundToInt().toInt()
 	}
 
-	public static BigInteger factorial(long x) {
-		BigInteger y = BigInteger.ONE;
-		x = Math.abs(x);
-		for (; x > 1; x--) {
-			y = y.multiply(BigInteger.valueOf(x));
+	fun factorial(x: Long): BigInteger {
+		var x = x
+		var y = BigInteger.ONE
+		x = abs(x)
+		while (x > 1) {
+			y = y.multiply(BigInteger.valueOf(x))
+			x--
 		}
-		return y;
+		return y
 	}
-
 }

@@ -1,31 +1,21 @@
-package com.sterndu.util;
+@file:JvmName("ReturnType")
+package com.sterndu.util
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+class ReturnType<out E : Any>(private val `val`: E) {
 
-public class ReturnType<E> {
+	val isArray: Boolean
+		get() = `val`.javaClass.isArray
+	val isCollection: Boolean
+		get() = MutableCollection::class.java.isInstance(`val`)
 
-	private final E retval;
-
-	public ReturnType(E val) {
-		retval = val;
+	fun isInstanceOf(clazz: Class<*>): Boolean {
+		return clazz.isInstance(`val`)
 	}
 
-	public E getVal() { return retval; }
-
-	public boolean isArray() { return retval.getClass().isArray(); }
-
-	public boolean isCollection() { return Collection.class.isInstance(retval); }
-
-	public boolean isInstanceOf(Class<?> clazz) { return clazz.isInstance(retval); }
-
-	public boolean isList() { return List.class.isInstance(retval); }
-
-	public boolean isMultipleVals() { return isCollection() | isArray(); }
-
-	public boolean isSet() {
-		return Set.class.isInstance(retval);
-	}
-
+	val isList: Boolean
+		get() = MutableList::class.java.isInstance(`val`)
+	val isMultipleVals: Boolean
+		get() = isCollection or isArray
+	val isSet: Boolean
+		get() = MutableSet::class.java.isInstance(`val`)
 }

@@ -1,103 +1,86 @@
-package com.sterndu.util;
+@file:JvmName("Scheduler")
+package com.sterndu.util
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
-public class Scheduler<K, E, O> {
-
-	@FunctionalInterface
-	public interface Task<E, O> {
-
-		O run(E[] e);
-
+class Scheduler<K, E, O>(threads: Int, private val task: Task<E, O>) {
+	fun interface Task<in E, O> {
+		fun run(e: Array<out E>?): O
 	}
 
-	private final List<Map.Entry<K, E[]>> e_li;
-	private final Task<E,O> task;
+	private val e_li: MutableList<Map.Entry<K, Array<out E>>>
+	private val res_map: MutableMap<K, O>
+	private val tg: ThreadGroup
+	private val threads: Array<Thread?>
+	private val ab: AtomicBoolean
 
-	private final Map<K, O> res_map;
-
-	private final ThreadGroup tg;
-
-	private final Thread[] threads;
-
-	private final AtomicBoolean ab;
-
-	public Scheduler(int threads, Task<E, O> t) {
-		this.threads = new Thread[threads];
-		this.task = t;
-		this.tg = new ThreadGroup("Task-Workers");
-		ab = new AtomicBoolean(false);
-		res_map = new HashMap<>();
-		e_li = new LinkedList<>();
-		Runnable r = () -> {
-			Scheduler<K, E, O> s = this;
-			Task<E, O> task = s.task;
+	init {
+		this.threads = arrayOfNulls(threads)
+		tg = ThreadGroup("Task-Workers")
+		ab = AtomicBoolean(false)
+		res_map = HashMap()
+		e_li = LinkedList()
+		val r = Runnable {
+			val s = this
+			val task = s.task
 			while (true) {
-				Map.Entry<K, E[]> data = s.getTask();
-				if (data != null) s.putResult(data.getKey(), task.run(data.getValue()));
-				else break;
+				val data = s.getTask()
+				if (data != null) s.putResult(data.key, task.run(data.value)) else break
 				try {
-					Thread.sleep(2);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.sleep(2)
+				} catch (e: InterruptedException) {
+					e.printStackTrace()
 				}
 			}
-		};
-		for (int i = 0; i < threads; i++) {
-			this.threads[i] = new Thread(tg, r, "Task-Worker " + i + " stop=0");
-			this.threads[i].start();
+		}
+		for (i in 0 until threads) {
+			this.threads[i] = Thread(tg, r, "Task-Worker $i stop=0")
+			this.threads[i]!!.start()
 		}
 	}
 
-	private synchronized Entry<K, E[]> getTask() {
+	@Synchronized
+	private fun getTask(): Map.Entry<K, Array<out E>>? {
 		do {
-			if (e_li.size() > 0) {
-				Map.Entry<K, E[]> entry = e_li.get(0);
-				e_li.remove(0);
-				return entry;
-			} else if (ab.get()) return null;
+			if (e_li.size > 0) {
+				val entry = e_li[0]
+				e_li.removeAt(0)
+				return entry
+			} else if (ab.get()) return null
 			try {
-				Thread.sleep(2);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				return null;
+				Thread.sleep(2)
+			} catch (e: InterruptedException) {
+				e.printStackTrace()
+				return null
 			}
-		} while (true);
+		} while (true)
 	}
 
-	private void putResult(K key, O result) {
-		synchronized (res_map) {
-			res_map.put(key, result);
-		}
+	private fun putResult(key: K, result: O) {
+		synchronized(res_map) { res_map.put(key, result) }
 	}
 
-	public O getResult(Object key) {
-		return res_map.get(key);
+	fun getResult(key: Any?): O? {
+		return res_map[key]
 	}
 
-	public Map<K, O> getResults() {
-
-		while (tg.activeCount() > 0) try {
-			Thread.sleep(2);
-			// System.out.println();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return res_map;
-	}
-
-	public void noAdditionalParams() {
-		ab.set(true);
-	}
-
-	@SuppressWarnings("unchecked")
-	public void pushParams(K obj, E... e) {
-		if (!ab.get())
-			synchronized (this.e_li) {
-				this.e_li.add(Map.entry(obj, e));
+	val results: Map<K, O>
+		get() {
+			while (tg.activeCount() > 0) try {
+				Thread.sleep(2)
+				// System.out.println();
+			} catch (e: InterruptedException) {
+				e.printStackTrace()
 			}
+			return res_map
+		}
+
+	fun noAdditionalParams() {
+		ab.set(true)
 	}
 
+	fun pushParams(obj: K, vararg e: E) {
+		if (!ab.get()) synchronized(e_li) { e_li.add(java.util.Map.entry(obj, e)) }
+	}
 }

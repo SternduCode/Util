@@ -1,207 +1,193 @@
-package com.sterndu.util;
+@file:JvmName("ZipUtil")
+package com.sterndu.util
 
-import java.io.*;
-import java.nio.file.attribute.FileTime;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.jar.*;
-import java.util.zip.*;
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.nio.file.attribute.FileTime
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
 
-public class ZipUtil {
-
-	private static boolean writeEntry(ZipOutputStream zos, File file, String name) {
-		if (file.isDirectory()) {
-			File[] f = file.listFiles();
-			for (File file2 : f)
-				if (!writeEntry(zos, file2, name + file.getName() + "/"))
-					return false;
+object ZipUtil {
+	private fun writeEntry(zos: ZipOutputStream, file: File, name: String): Boolean {
+		if (file.isDirectory) {
+			val f = file.listFiles()
+			for (file2 in f) if (!writeEntry(zos, file2, name + file.name + "/")) return false
 		} else {
-			ZipEntry z = new ZipEntry(name + file.getName());
-			z.setLastModifiedTime(FileTime.fromMillis(file.lastModified()));
+			val z = ZipEntry(name + file.name)
+			z.setLastModifiedTime(FileTime.fromMillis(file.lastModified()))
 			try {
-				zos.putNextEntry(z);
-				FileInputStream fis = new FileInputStream(file);
-				byte[] b = new byte[fis.available()];
-				int i = fis.read(b);
-				fis.close();
-				zos.write(b, 0, i);
-				zos.closeEntry();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
+				zos.putNextEntry(z)
+				val fis = FileInputStream(file)
+				val b = ByteArray(fis.available())
+				val i = fis.read(b)
+				fis.close()
+				zos.write(b, 0, i)
+				zos.closeEntry()
+			} catch (e: IOException) {
+				e.printStackTrace()
+				return false
 			}
 		}
-		return true;
+		return true
 	}
 
-	public static boolean DeZip(File zipfile, File targetfolder) {
-		if (zipfile.exists() & targetfolder.isDirectory()) {
-			if (!targetfolder.exists())
-				targetfolder.mkdirs();
-			if (zipfile.isFile()) {
-				String name = zipfile.getName();
-				if (name.endsWith(".zip"))
-					try {
-						return DeZip(new ZipFile(zipfile), targetfolder);
-					} catch (IOException e) {
-						e.printStackTrace();
-						return false;
-					}
-				else if (name.endsWith(".jar"))
-					try {
-						return DeZip(new JarFile(zipfile), targetfolder);
-					} catch (IOException e) {
-						e.printStackTrace();
-						return false;
-					}
+	fun DeZip(zipfile: File, targetfolder: File): Boolean {
+		if (zipfile.exists() and targetfolder.isDirectory) {
+			if (!targetfolder.exists()) targetfolder.mkdirs()
+			if (zipfile.isFile) {
+				val name = zipfile.name
+				if (name.endsWith(".zip")) return try {
+					DeZip(ZipFile(zipfile), targetfolder)
+				} catch (e: IOException) {
+					e.printStackTrace()
+					false
+				} else if (name.endsWith(".jar")) return try {
+					DeZip(JarFile(zipfile), targetfolder)
+				} catch (e: IOException) {
+					e.printStackTrace()
+					false
+				}
 			}
 		}
-		return false;
+		return false
 	}
 
-	public static boolean DeZip(File zipfile, String targetfolder) {
-		return DeZip(zipfile, new File(targetfolder));
+	fun DeZip(zipfile: File, targetfolder: String?): Boolean {
+		return DeZip(zipfile, File(targetfolder))
 	}
 
-	public static boolean DeZip(JarFile zipfile, File targetfolder) {
-		AtomicBoolean ab = new AtomicBoolean(true);
-		zipfile.stream().parallel().forEach(zipEntry -> {
+	fun DeZip(zipfile: JarFile, targetfolder: File?): Boolean {
+		val ab = AtomicBoolean(true)
+		zipfile.stream().parallel().forEach { zipEntry: JarEntry ->
 			try {
-				File f = new File(targetfolder, zipEntry.getName());
-				if (zipEntry.isDirectory())
-					f.mkdirs();
-				else {
-					if (!f.getParentFile().exists())
-						f.getParentFile().mkdirs();
-					f.createNewFile();
-					InputStream is = zipfile.getInputStream(zipEntry);
-					byte[] b = new byte[is.available()];
-					int i = is.read(b);
-					FileOutputStream fos = new FileOutputStream(f);
-					fos.write(b, 0, i);
-					fos.flush();
-					fos.close();
-					f.setLastModified(zipEntry.getLastModifiedTime().toMillis());
+				val f = File(targetfolder, zipEntry.name)
+				if (zipEntry.isDirectory) f.mkdirs() else {
+					if (!f.parentFile.exists()) f.parentFile.mkdirs()
+					f.createNewFile()
+					val `is` = zipfile.getInputStream(zipEntry)
+					val b = ByteArray(`is`.available())
+					val i = `is`.read(b)
+					val fos = FileOutputStream(f)
+					fos.write(b, 0, i)
+					fos.flush()
+					fos.close()
+					f.setLastModified(zipEntry.lastModifiedTime.toMillis())
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				ab.set(false);
-			}
-		});
-		return ab.get();
-	}
-
-	public static boolean DeZip(JarFile zipfile, String targetfolder) {
-		return DeZip(zipfile, new File(targetfolder));
-	}
-
-	public static boolean DeZip(String zipfile, File targetfolder) {
-		return DeZip(new File(zipfile), targetfolder);
-	}
-
-	public static boolean DeZip(String zipfile, String targetfolder) {
-		return DeZip(new File(zipfile), new File(targetfolder));
-	}
-
-	public static boolean DeZip(ZipFile zipfile, File targetfolder) {
-		AtomicBoolean ab = new AtomicBoolean(true);
-		zipfile.stream().parallel().forEach(zipEntry -> {
-			try {
-				File f = new File(targetfolder, zipEntry.getName());
-				if (zipEntry.isDirectory())
-					f.mkdirs();
-				else {
-					if (!f.getParentFile().exists())
-						f.getParentFile().mkdirs();
-					f.createNewFile();
-					InputStream is = zipfile.getInputStream(zipEntry);
-					byte[] b = new byte[is.available()];
-					int i = is.read(b);
-					FileOutputStream fos = new FileOutputStream(f);
-					fos.write(b, 0, i);
-					fos.flush();
-					fos.close();
-					f.setLastModified(zipEntry.getLastModifiedTime().toMillis());
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				ab.set(false);
-			}
-		});
-		return ab.get();
-	}
-
-	public static boolean DeZip(ZipFile zipfile, String targetfolder) {
-		return DeZip(zipfile, new File(targetfolder));
-	}
-
-	public static boolean Zip(File folder, File zipfile) {
-		if (folder.exists() && folder.isDirectory()) {
-			if (!zipfile.exists())
-				try {
-					zipfile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-					return false;
-				}
-			if (zipfile.isFile()) {
-				String name = zipfile.getName();
-				if (name.endsWith(".zip"))
-					try {
-						return Zip(new ZipOutputStream(new FileOutputStream(zipfile)), folder);
-					} catch (IOException e) {
-						e.printStackTrace();
-						return false;
-					}
-				else if (name.endsWith(".jar"))
-					try {
-						return Zip(new JarOutputStream(new FileOutputStream(zipfile)), folder);
-					} catch (IOException e) {
-						e.printStackTrace();
-						return false;
-					}
+			} catch (e: IOException) {
+				e.printStackTrace()
+				ab.set(false)
 			}
 		}
-		return false;
+		return ab.get()
 	}
 
-	public static boolean Zip(File folder, String zipfile) {
-		return Zip(folder, new File(zipfile));
+	fun DeZip(zipfile: JarFile, targetfolder: String?): Boolean {
+		return DeZip(zipfile, File(targetfolder))
 	}
 
-	public static boolean Zip(JarOutputStream jos, File folder) {
-		File[] f = folder.listFiles();
-		for (File file : f)
-			if (!writeEntry(jos, file, ""))
-				return false;
+	fun DeZip(zipfile: String?, targetfolder: File): Boolean {
+		return DeZip(File(zipfile), targetfolder)
+	}
+
+	fun DeZip(zipfile: String?, targetfolder: String?): Boolean {
+		return DeZip(File(zipfile), File(targetfolder))
+	}
+
+	fun DeZip(zipfile: ZipFile, targetfolder: File?): Boolean {
+		val ab = AtomicBoolean(true)
+		zipfile.stream().parallel().forEach { zipEntry: ZipEntry ->
+			try {
+				val f = File(targetfolder, zipEntry.name)
+				if (zipEntry.isDirectory) f.mkdirs() else {
+					if (!f.parentFile.exists()) f.parentFile.mkdirs()
+					f.createNewFile()
+					val `is` = zipfile.getInputStream(zipEntry)
+					val b = ByteArray(`is`.available())
+					val i = `is`.read(b)
+					val fos = FileOutputStream(f)
+					fos.write(b, 0, i)
+					fos.flush()
+					fos.close()
+					f.setLastModified(zipEntry.lastModifiedTime.toMillis())
+				}
+			} catch (e: IOException) {
+				e.printStackTrace()
+				ab.set(false)
+			}
+		}
+		return ab.get()
+	}
+
+	fun DeZip(zipfile: ZipFile, targetfolder: String?): Boolean {
+		return DeZip(zipfile, File(targetfolder))
+	}
+
+	fun Zip(folder: File, zipfile: File): Boolean {
+		if (folder.exists() && folder.isDirectory) {
+			if (!zipfile.exists()) try {
+				zipfile.createNewFile()
+			} catch (e: IOException) {
+				e.printStackTrace()
+				return false
+			}
+			if (zipfile.isFile) {
+				val name = zipfile.name
+				if (name.endsWith(".zip")) return try {
+					Zip(ZipOutputStream(FileOutputStream(zipfile)), folder)
+				} catch (e: IOException) {
+					e.printStackTrace()
+					false
+				} else if (name.endsWith(".jar")) return try {
+					Zip(JarOutputStream(FileOutputStream(zipfile)), folder)
+				} catch (e: IOException) {
+					e.printStackTrace()
+					false
+				}
+			}
+		}
+		return false
+	}
+
+	fun Zip(folder: File, zipfile: String?): Boolean {
+		return Zip(folder, File(zipfile))
+	}
+
+	fun Zip(jos: JarOutputStream, folder: File): Boolean {
+		val f = folder.listFiles()
+		for (file in f) if (!writeEntry(jos, file, "")) return false
 		try {
-			jos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+			jos.close()
+		} catch (e: IOException) {
+			e.printStackTrace()
+			return false
 		}
-		return true;
+		return true
 	}
 
-	public static boolean Zip(String folder, File zipfile) {
-		return Zip(new File(folder), zipfile);
+	fun Zip(folder: String?, zipfile: File): Boolean {
+		return Zip(File(folder), zipfile)
 	}
 
-	public static boolean Zip(String folder, String zipfile) {
-		return Zip(new File(folder), new File(zipfile));
+	fun Zip(folder: String?, zipfile: String?): Boolean {
+		return Zip(File(folder), File(zipfile))
 	}
 
-	public static boolean Zip(ZipOutputStream zos, File folder) {
-		File[] f = folder.listFiles();
-		for (File file : f)
-			if (!writeEntry(zos, file, ""))
-				return false;
+	fun Zip(zos: ZipOutputStream, folder: File): Boolean {
+		val f = folder.listFiles()
+		for (file in f) if (!writeEntry(zos, file, "")) return false
 		try {
-			zos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+			zos.close()
+		} catch (e: IOException) {
+			e.printStackTrace()
+			return false
 		}
-		return true;
+		return true
 	}
-
 }

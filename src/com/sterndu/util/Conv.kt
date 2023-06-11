@@ -1,76 +1,61 @@
-package com.sterndu.util;
+@file:JvmName("Conv")
+package com.sterndu.util
 
-import java.io.*;
-import java.util.*;
+import java.io.*
+import java.util.function.Consumer
 
-public class Conv extends OutputStream {
-	public static class InputStream extends java.io.InputStream {
-		private final List<Byte> data = new ArrayList<>();
-		private int pos = 0;
-
-		private InputStream() {
-
+class Conv : OutputStream {
+	class InputStream : java.io.InputStream() {
+		val data: MutableList<Byte> = ArrayList()
+		private var pos = 0
+		@Throws(IOException::class)
+		override fun available(): Int {
+			return data.size
 		}
 
-		@Override
-		public int available() throws IOException {
-			return data.size();
+		@Throws(IOException::class)
+		override fun read(): Int {
+			return if (++pos > data.size) -1 else data[pos - 1].toInt()
 		}
 
-		@Override
-		public int read() throws IOException {
-			return ++pos > data.size() ? -1 : data.get(pos - 1);
+		@Synchronized
+		@Throws(IOException::class)
+		override fun reset() {
+			pos = 0
 		}
 
-		@Override
-		public synchronized void reset() throws IOException {
-			pos=0;
-		}
-
-		@Override
-		public long transferTo(OutputStream out) throws IOException {
-			data.forEach(d -> {
+		@Throws(IOException::class)
+		override fun transferTo(out: OutputStream): Long {
+			data.forEach(Consumer { d: Byte ->
 				try {
-					out.write(d);
-				} catch (IOException e) {
-					e.printStackTrace();
+					out.write(d.toInt())
+				} catch (e: IOException) {
+					e.printStackTrace()
 				}
-			});
-			return data.size();
+			})
+			return data.size.toLong()
 		}
-
 	}
 
-	private InputStream is;
-	private OutputStream os;
+	var `is`: InputStream? = null
+		private set
+	var os: OutputStream? = null
 
-	public Conv() {
-		is = new InputStream();
+	constructor() {
+		`is` = InputStream()
 	}
 
-	public Conv(OutputStream os) {
-		setOs(os);
+	constructor(os: OutputStream?) {
+		this.os = os
 	}
 
-	public InputStream getIs() {
-		return is;
+	fun reset() {
+		`is`!!.data.clear()
 	}
 
-	public OutputStream getOs() {
-		return os;
-	}
-
-	public void reset() {
-		is.data.clear();
-	}
-
-	public void setOs(OutputStream os) {
-		this.os = os;
-	}
-
-	@Override
-	public void write(int arg0) throws IOException {
-		is.data.add((byte) arg0);
-		os.write(arg0);
+	@Throws(IOException::class)
+	override fun write(arg0: Int) {
+		`is`!!.data.add(arg0.toByte())
+		os!!.write(arg0)
 	}
 }

@@ -1,28 +1,21 @@
-package com.sterndu.util.vector;
+@file:JvmName("Vec2f")
+package com.sterndu.util.vector
 
-public class Vec2f {
-	public float x, y;
+import java.util.Vector
+import kotlin.math.pow
+import kotlin.math.sqrt
 
-	public Vec2f() {
-		x=0.0f;
-		y=0.0f;
-	}
+data class Vec2f @JvmOverloads constructor(val x: Float = 0.0f, val y: Float = 0.0f) {
 
-	public Vec2f(float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
+	constructor(vector: Vec2f) : this(vector.x, vector.y)
 
-	public Vec2f(Vec2f vector) {
-		x = vector.x;
-		y = vector.y;
-	}
-
-	public float distance(Vec2f vector) {
-		float dist = 0, xdist = x - vector.x, ydist = y - vector.y;
-		if (xdist < 0) xdist *= -1;
-		if (ydist < 0) ydist *= -1;
-		dist = (float) Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist, 2));
-		return dist;
+	fun distance(vector: Vec2f): Float {
+ 		var dist = 0f
+		var xdist = x - vector.x
+		var ydist = y - vector.y
+		if (xdist < 0) xdist *= -1f
+		if (ydist < 0) ydist *= -1f
+		dist = sqrt(xdist.toDouble().pow(2.0) + ydist.toDouble().pow(2.0)).toFloat()
+		return dist
 	}
 }

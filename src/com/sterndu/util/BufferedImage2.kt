@@ -1,17 +1,18 @@
-package com.sterndu.util;
+@file:JvmName("BufferedImage2")
+package com.sterndu.util
 
-import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImage
 
-public class BufferedImage2 {
-	public BufferedImage bi;
-	public boolean first;
+class BufferedImage2 {
+	var bi: BufferedImage
+	var first = false
 
-	public BufferedImage2(BufferedImage bi) {
-		this.bi = bi;
+	constructor(bi: BufferedImage) {
+		this.bi = bi
 	}
 
-	public BufferedImage2(BufferedImage bi, boolean first) {
-		this.bi = bi;
-		this.first = first;
+	constructor(bi: BufferedImage, first: Boolean) {
+		this.bi = bi
+		this.first = first
 	}
 }

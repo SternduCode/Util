@@ -5,4 +5,5 @@ module com.sterndu.Util {
 	exports com.sterndu.util.vector;
 
 	requires transitive java.desktop;
+	requires kotlin.stdlib;
 }

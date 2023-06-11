@@ -1,23 +1,14 @@
-package com.sterndu.util;
+@file:JvmName("Listener")
+package com.sterndu.util
 
-import java.util.function.Consumer;
+import java.util.function.Consumer
 
-public class Listener<T> {
-	
-	private Consumer<T> m;
-	private T data = null;
-	
-	public Listener(Consumer<T> c) {
-		m = c;
-	}
-	
-	public void call(T nv) {
-		data = nv;
-		m.accept(nv);
-	}
-	
-	public T getData() {
-		return data;
-	}
+class Listener<T>(private val m: Consumer<T>) {
+	var data: T? = null
+		private set
 
+	fun call(nv: T) {
+		data = nv
+		m.accept(nv)
+	}
 }
