@@ -22,7 +22,6 @@ fun encode(bytes: ByteArray): String {
 	return out
 }
 
-@Suppress("unused")
 fun main() {
 	println(ORACLE.toCharArray().size)
 	println(ORACLE.toByteArray(Charsets.UTF_8).size)
