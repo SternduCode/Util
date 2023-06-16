@@ -80,14 +80,14 @@ fun equals(a: Any, b: Any?): Boolean {
 }
 
 /**
- * Gets the all objectsfrom iterablewith param.
+ * Gets the all objects from iterable with param.
  *
  * @param <E> the element type
  * @param <O> the generic type
  * @param list the list
  * @param f the f
  * @param o the o
- * @return the all objectsfrom iterablewith param
+ * @return the all objects from iterable with param
 </O></E> */
 fun <E, O> getAllObjectsfromIterablewithParam(list: Iterable<E>, f: Function<E, O>, o: O): List<E> {
 	val li: MutableList<E> = ArrayList()
@@ -96,14 +96,14 @@ fun <E, O> getAllObjectsfromIterablewithParam(list: Iterable<E>, f: Function<E, 
 }
 
 /**
- * Gets the objectfrom iterablewith param.
+ * Gets the object from iterable with param.
  *
  * @param <E> the element type
  * @param <O> the generic type
  * @param list the list
  * @param f the f
  * @param o the o
- * @return the objectfrom iterablewith param
+ * @return the object from iterable with param
 </O></E> */
 fun <E, O> getObjectfromIterablewithParam(list: Iterable<E>, f: Function<E, O>, o: O): E? {
 	for (e in list) if (f.apply(e) == o) return e
