@@ -3,14 +3,15 @@ package com.sterndu.util
 
 import java.util.function.Consumer
 import java.util.function.Function
+import kotlin.math.ceil
+import kotlin.math.floor
 
 object DataSplitter {
-	fun recive(recivemethod: Function<Consumer<ByteArray>?, Listener<ByteArray?>?>, init: String): ByteArray {
-		val initsp = init.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-		var i = 0
+	fun recive(recivemethod: Function<Consumer<ByteArray>, Listener<ByteArray?>?>, init: String): ByteArray {
+		val initSplit = init.split('-').dropLastWhile { it.isEmpty() }.toTypedArray()
 		var b = ByteArray(0)
-		i = try {
-			initsp[1].toInt()
+		val i: Int = try {
+			initSplit[1].toInt()
 		} catch (e: NumberFormatException) {
 			return init.toByteArray()
 		}
@@ -33,16 +34,16 @@ object DataSplitter {
 		return b
 	}
 
-	fun send(sendmethod: Consumer<ByteArray?>, data: ByteArray) {
+	fun send(sendMethod: Consumer<ByteArray>, data: ByteArray) {
 		val l = data.size
-		val num = Math.ceil(l / 256.0).toInt()
+		val num = ceil(l / 256.0).toInt()
 		val b = Array(num) { ByteArray(256) }
 		for (i in data.indices) {
-			val s = Math.floor(i / 256.0).toInt()
+			val s = floor(i / 256.0).toInt()
 			b[s][i - s * 256] = data[i]
 		}
 		val str = "Splitted-$num"
-		sendmethod.accept(str.toByteArray())
-		for (element in b) sendmethod.accept(element)
+		sendMethod.accept(str.toByteArray())
+		for (element in b) sendMethod.accept(element)
 	}
 }

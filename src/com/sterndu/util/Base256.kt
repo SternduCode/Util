@@ -8,7 +8,8 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // -18 Length = 238 ß
-private const val ORACLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789=+-*/_#~!?([{}])'\\\"%&^<>|@ѬѭѪѫѨѩѦѧЫыФфБДЖЗИЛЦЧШЩЪЭЮЯбвгджзилнтцbArrшщъэюяђљњѯѱѳΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω𐌀𐌁𐌂𐌃𐌄𐌅𐌆𐌇𐌉𐌊𐌋𐌌𐌍𐌏𐌐𐌒𐌓𐌔𐌕𐌖𐌗𐌈𐌎𐌑𐌘𐌙𐌚𐌛𐌜𐌝𐌞𐌠𐌡𐌢𐌣öäüÖÄÜ§$€°,;.:ß¥·↕ï←♀▬Ì▀ú↑Ç‼Â¯¶bûÎ"
+private const val ORACLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789=+-*/_#~!?([{}])'\\\"%&^<>|@ѬѭѪѫѨѩѦѧЫыФфБДЖЗИЛЦЧШЩЪЭЮЯ" +
+		"бвгджзилнтцbArrшщъэюяђљњѯѱѳΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω𐌀𐌁𐌂𐌃𐌄𐌅𐌆𐌇𐌉𐌊𐌋𐌌𐌍𐌏𐌐𐌒𐌓𐌔𐌕𐌖𐌗𐌈𐌎𐌑𐌘𐌙𐌚𐌛𐌜𐌝𐌞𐌠𐌡𐌢𐌣öäüÖÄÜ§$€°,;.:ß¥·↕ï←♀▬Ì▀ú↑Ç‼Â¯¶bûÎ"
 
 fun decode(string: String): ByteArray {
 	val bytes = ByteArray(string.length)
@@ -70,26 +71,12 @@ fun printIp(ipData: ByteArray) {
 	while (i < ipData.size) {
 		when (ipData[i]) {
 			1.toByte() -> {
-				var j = 1
-				while (j < 16) {
-					val x =
-						(java.lang.Byte.toUnsignedInt(ipData[i + j]) shl 8) + java.lang.Byte.toUnsignedInt(ipData[i + j + 1])
-					print(Integer.toHexString(x))
-					if (j < 15) print(':')
-					j += 2
-				}
-				println()
+				printIpV6(ipData, i)
 				i += 17
 			}
 
 			2.toByte() -> {
-				var j = 1
-				while (j <= 4) {
-					print(java.lang.Byte.toUnsignedInt(ipData[i + j]))
-					if (j < 4) print('.')
-					j++
-				}
-				println()
+				printIpV4(ipData, i)
 				i += 5
 			}
 
@@ -102,4 +89,26 @@ fun printIp(ipData: ByteArray) {
 			else -> println(ipData[i++])
 		}
 	}
+}
+
+fun printIpV6(ipData: ByteArray, offset: Int) {
+	var j = 1
+	while (j < 16) {
+		val x =
+			(java.lang.Byte.toUnsignedInt(ipData[offset + j]) shl 8) + java.lang.Byte.toUnsignedInt(ipData[offset + j + 1])
+		print(Integer.toHexString(x))
+		if (j < 15) print(':')
+		j += 2
+	}
+	println()
+}
+
+fun printIpV4(ipData: ByteArray, offset: Int) {
+	var j = 1
+	while (j <= 4) {
+		print(java.lang.Byte.toUnsignedInt(ipData[offset + j]))
+		if (j < 4) print('.')
+		j++
+	}
+	println()
 }

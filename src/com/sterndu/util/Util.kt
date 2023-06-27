@@ -116,14 +116,7 @@ fun <E, O> getObjectfromIterablewithParam(list: Iterable<E>, f: Function<E, O>, 
  * @param str the str
  * @return the string stream
  */
-fun getStringStream(str: String): InputStream? {
-	return try {
-		ByteArrayInputStream(str.toByteArray(charset("UTF-8")))
-	} catch (e: UnsupportedEncodingException) {
-		e.printStackTrace()
-		null
-	}
-}
+fun getStringStream(str: String): InputStream = ByteArrayInputStream(str.toByteArray(Charsets.UTF_8))
 
 /**
  * Mapto string.

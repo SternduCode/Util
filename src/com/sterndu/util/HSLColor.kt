@@ -61,14 +61,6 @@ class HSLColor {
 	 * @param l     the Lumanance percentage between 0 - 100
 	 * @param alpha the alpha value between 0 - 1
 	 */
-	/**
-	 * Create a HSLColor object using individual HSL values and a default
-	 * alpha value of 1.0.
-	 *
-	 * @param h is the Hue value in degrees between 0 - 360
-	 * @param s is the Saturation percentage between 0 - 100
-	 * @param l is the Lumanance percentage between 0 - 100
-	 */
 	@JvmOverloads
 	constructor(h: Float, s: Float, l: Float, alpha: Float = 1.0f) {
 		hSL = floatArrayOf(h, s, l)
@@ -81,12 +73,6 @@ class HSLColor {
 	 *
 	 * @param hsl  array containing HSL values
 	 * @param alpha the alpha value between 0 - 1
-	 */
-	/**
-	 * Create a HSLColor object using an an array containing the
-	 * individual HSL values and with a default alpha value of 1.
-	 *
-	 * @param hsl  array containing HSL values
 	 */
 	@JvmOverloads
 	constructor(hsl: FloatArray, alpha: Float = 1.0f) {
@@ -213,27 +199,26 @@ class HSLColor {
 		 */
 		fun fromRGB(color: Color): FloatArray {
 			//  Get RGB values in the range 0 - 1
-			val rgb = color.getRGBColorComponents(null)
-			val r = rgb[0]
-			val g = rgb[1]
-			val b = rgb[2]
+			val (r, g, b) = color.getRGBColorComponents(null)
 
 			//	Minimum and Maximum RGB values are used in the HSL calculations
-			val min = Math.min(r, Math.min(g, b))
-			val max = Math.max(r, Math.max(g, b))
+			val min = r.coerceAtMost(g.coerceAtMost(b))
+			val max = r.coerceAtLeast(g.coerceAtLeast(b))
 
 			//  Calculate the Hue
-			var h = 0f
-			if (max == min) h = 0f else if (max == r) h =
-				(60 * (g - b) / (max - min) + 360) % 360 else if (max == g) h =
-				60 * (b - r) / (max - min) + 120 else if (max == b) h = 60 * (r - g) / (max - min) + 240
+			val h = when (max) {
+				min -> 0f
+				r -> (60 * (g - b) / (max - min) + 360) % 360
+				g -> 60 * (b - r) / (max - min) + 120
+				b -> 60 * (r - g) / (max - min) + 240
+				else -> 0f
+			}
 
 			//  Calculate the Luminance
 			val l = (max + min) / 2
 
 			//  Calculate the Saturation
-			var s = 0f
-			s = if (max == min) 0f else if (l <= .5f) (max - min) / (max + min) else (max - min) / (2 - max - min)
+			val s: Float = if (max == min) 0f else if (l <= .5f) (max - min) / (max + min) else (max - min) / (2 - max - min)
 			return floatArrayOf(h, s * 100, l * 100)
 		}
 		/**
@@ -243,15 +228,6 @@ class HSLColor {
 		 * @param s Saturation is specified as a percentage in the range 1 - 100.
 		 * @param l Lumanance is specified as a percentage in the range 1 - 100.
 		 * @param alpha  the alpha value between 0 - 1
-		 *
-		 * @returns the RGB Color object
-		 */
-		/**
-		 * Convert HSL values to a RGB Color with a default alpha value of 1.
-		 *
-		 * @param h Hue is specified as degrees in the range 0 - 360.
-		 * @param s Saturation is specified as a percentage in the range 1 - 100.
-		 * @param l Lumanance is specified as a percentage in the range 1 - 100.
 		 *
 		 * @returns the RGB Color object
 		 */
@@ -274,19 +250,18 @@ class HSLColor {
 			}
 
 			//  Formula needs all values between 0 - 1.
-			h = h % 360.0f
+			h %= 360.0f
 			h /= 360f
 			s /= 100f
 			l /= 100f
-			var q = 0f
-			q = if (l < 0.5) l * (1 + s) else l + s - s * l
+			val q: Float = if (l < 0.5) l * (1 + s) else l + s - s * l
 			val p = 2 * l - q
-			var r = Math.max(0f, HueToRGB(p, q, h + 1.0f / 3.0f))
-			var g = Math.max(0f, HueToRGB(p, q, h))
-			var b = Math.max(0f, HueToRGB(p, q, h - 1.0f / 3.0f))
-			r = Math.min(r, 1.0f)
-			g = Math.min(g, 1.0f)
-			b = Math.min(b, 1.0f)
+			var r = 0f.coerceAtLeast(HueToRGB(p, q, h + 1.0f / 3.0f))
+			var g = 0f.coerceAtLeast(HueToRGB(p, q, h))
+			var b = 0f.coerceAtLeast(HueToRGB(p, q, h - 1.0f / 3.0f))
+			r = r.coerceAtMost(1.0f)
+			g = g.coerceAtMost(1.0f)
+			b = b.coerceAtMost(1.0f)
 			return Color(r, g, b, alpha)
 		}
 		/**
@@ -297,16 +272,6 @@ class HSLColor {
 		 *
 		 * @param hsl    an array containing the 3 HSL values
 		 * @param alpha  the alpha value between 0 - 1
-		 *
-		 * @returns the RGB Color object
-		 */
-		/**
-		 * Convert HSL values to a RGB Color with a default alpha value of 1.
-		 * H (Hue) is specified as degrees in the range 0 - 360.
-		 * S (Saturation) is specified as a percentage in the range 1 - 100.
-		 * L (Lumanance) is specified as a percentage in the range 1 - 100.
-		 *
-		 * @param hsl an array containing the 3 HSL values
 		 *
 		 * @returns the RGB Color object
 		 */
