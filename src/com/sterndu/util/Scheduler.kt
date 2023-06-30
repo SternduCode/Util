@@ -43,7 +43,7 @@ class Scheduler<K, E, O>(threads: Int, private val task: Task<E, O>) {
 	@Synchronized
 	private fun getTask(): Map.Entry<K, Array<out E>>? {
 		do {
-			if (e_li.size > 0) {
+			if (e_li.isNotEmpty()) {
 				val entry = e_li[0]
 				e_li.removeAt(0)
 				return entry
@@ -69,7 +69,6 @@ class Scheduler<K, E, O>(threads: Int, private val task: Task<E, O>) {
 		get() {
 			while (tg.activeCount() > 0) try {
 				Thread.sleep(2)
-				// System.out.println();
 			} catch (e: InterruptedException) {
 				e.printStackTrace()
 			}

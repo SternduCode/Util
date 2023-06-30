@@ -6,16 +6,16 @@ class ReturnType<out E : Any>(private val `val`: E) {
 	val isArray: Boolean
 		get() = `val`.javaClass.isArray
 	val isCollection: Boolean
-		get() = MutableCollection::class.java.isInstance(`val`)
+		get() = `val` is Collection<*>
 
 	fun isInstanceOf(clazz: Class<*>): Boolean {
 		return clazz.isInstance(`val`)
 	}
 
 	val isList: Boolean
-		get() = MutableList::class.java.isInstance(`val`)
+		get() = `val` is List<*>
 	val isMultipleVals: Boolean
 		get() = isCollection or isArray
 	val isSet: Boolean
-		get() = MutableSet::class.java.isInstance(`val`)
+		get() = `val` is Set<*>
 }
