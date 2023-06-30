@@ -4,6 +4,7 @@ package com.sterndu.util
 import java.io.*
 import java.util.*
 import java.util.function.Function
+import kotlin.jvm.Throws
 
 /**
  * Equals.
@@ -180,6 +181,7 @@ fun numberToBinaryString(n: Number, minlength: Int = 0): String {
  * @return true, if successful
  */
 @JvmOverloads
+@Throws(IOException::class)
 fun readXBytes(b: ByteArray, `is`: InputStream, amount: Int, timeout: Long = 1000L): Boolean {
 	if (b.size < amount) return false
 	if (amount == 0) return true
@@ -187,7 +189,7 @@ fun readXBytes(b: ByteArray, `is`: InputStream, amount: Int, timeout: Long = 100
 	var written = 0
 	while (System.currentTimeMillis() - time < timeout && written < amount) try {
 		if (`is`.available() > 0) {
-			val w = `is`.read(b, written, Math.min(amount - written, `is`.available()))
+			val w = `is`.read(b, written, (amount - written).coerceAtMost(`is`.available()))
 			written += w
 			if (w > 0) time = System.currentTimeMillis() else written -= w
 		}
