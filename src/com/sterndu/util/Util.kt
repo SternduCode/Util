@@ -3,8 +3,6 @@ package com.sterndu.util
 
 import java.io.*
 import java.util.*
-import java.util.function.Function
-import kotlin.jvm.Throws
 
 /**
  * Equals.
@@ -81,37 +79,6 @@ fun equals(a: Any, b: Any?): Boolean {
 }
 
 /**
- * Gets the all objects from iterable with param.
- *
- * @param <E> the element type
- * @param <O> the generic type
- * @param list the list
- * @param f the f
- * @param o the o
- * @return the all objects from iterable with param
-</O></E> */
-fun <E, O> getAllObjectsfromIterablewithParam(list: Iterable<E>, f: Function<E, O>, o: O): List<E> {
-	val li: MutableList<E> = ArrayList()
-	for (e in list) if (f.apply(e) == o) li.add(e)
-	return li
-}
-
-/**
- * Gets the object from iterable with param.
- *
- * @param <E> the element type
- * @param <O> the generic type
- * @param list the list
- * @param f the f
- * @param o the o
- * @return the object from iterable with param
-</O></E> */
-fun <E, O> getObjectfromIterablewithParam(list: Iterable<E>, f: Function<E, O>, o: O): E? {
-	for (e in list) if (f.apply(e) == o) return e
-	return null
-}
-
-/**
  * Gets the string stream.
  *
  * @param str the str
@@ -120,15 +87,15 @@ fun <E, O> getObjectfromIterablewithParam(list: Iterable<E>, f: Function<E, O>, 
 fun getStringStream(str: String): InputStream = ByteArrayInputStream(str.toByteArray(Charsets.UTF_8))
 
 /**
- * Mapto string.
+ * Map to string.
  *
  * @param <E> the element type
  * @param <T> the generic type
  * @param map the map
- * @param seperator the seperator
+ * @param separator the separator
  * @return the string
 </T></E> */
-fun <E, T> MaptoString(map: Map<E, T>, seperator: Char): String {
+fun <E, T> MapToString(map: Map<E, T>, separator: Char): String {
 	val set = map.keys
 	val sb = StringBuilder()
 	for (e in set) {
@@ -136,7 +103,7 @@ fun <E, T> MaptoString(map: Map<E, T>, seperator: Char): String {
 		sb.append(e.toString())
 		if (!c) sb.append("=\"") else sb.append("='")
 		sb.append(map[e].toString())
-		if (!c) sb.append("\"" + seperator) else sb.append("'$seperator")
+		if (!c) sb.append("\"" + separator) else sb.append("'$separator")
 	}
 	if (sb.length > 0) sb.setLength(sb.length - 1)
 	return sb.toString()
@@ -144,24 +111,19 @@ fun <E, T> MaptoString(map: Map<E, T>, seperator: Char): String {
 /**
  * Number to binary string.
  *
- * @param n the n
- * @param minlength the minlength
- * @return the string
- */
-/**
- * Number to binary string.
- *
- * @param n the n
+ * @param n the number
+ * @param minLength the minLength
  * @return the string
  */
 @JvmOverloads
-fun numberToBinaryString(n: Number, minlength: Int = 0): String {
+fun numberToBinaryString(n: Number, minLength: Int = 0): String {
 	val num = java.lang.Long.toBinaryString(n.toLong()).toCharArray()
-	val chars = CharArray(Math.max(minlength, num.size))
+	val chars = CharArray(minLength.coerceAtLeast(num.size))
 	Arrays.fill(chars, '0')
 	for (i in num.indices) chars[chars.size - i - 1] = num[num.size - i - 1]
 	return String(chars)
 }
+
 /**
  * Read X bytes.
  *
@@ -170,14 +132,6 @@ fun numberToBinaryString(n: Number, minlength: Int = 0): String {
  * @param amount  the amount
  * @param timeout the timeout
  *
- * @return true, if successful
- */
-/**
- * Read X bytes.
- *
- * @param b the b
- * @param is the is
- * @param amount the amount
  * @return true, if successful
  */
 @JvmOverloads

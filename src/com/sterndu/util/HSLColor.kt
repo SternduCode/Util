@@ -58,7 +58,7 @@ class HSLColor {
 	 *
 	 * @param h     the Hue value in degrees between 0 - 360
 	 * @param s     the Saturation percentage between 0 - 100
-	 * @param l     the Lumanance percentage between 0 - 100
+	 * @param l     the Luminance percentage between 0 - 100
 	 * @param alpha the alpha value between 0 - 1
 	 */
 	@JvmOverloads
@@ -68,7 +68,7 @@ class HSLColor {
 		rGB = toRGB(hSL, alpha)
 	}
 	/**
-	 * Create a HSLColor object using an an array containing the
+	 * Create a HSLColor object using an array containing the
 	 * individual HSL values.
 	 *
 	 * @param hsl  array containing HSL values
@@ -82,7 +82,7 @@ class HSLColor {
 	}
 
 	/**
-	 * Create a RGB Color object based on this HSLColor with a different
+	 * Create an RGB Color object based on this HSLColor with a different
 	 * Hue value. The degrees specified is an absolute value.
 	 *
 	 * @param degrees - the Hue value between 0 - 360
@@ -93,7 +93,7 @@ class HSLColor {
 	}
 
 	/**
-	 * Create a RGB Color object based on this HSLColor with a different
+	 * Create an RGB Color object based on this HSLColor with a different
 	 * Luminance value. The percent specified is an absolute value.
 	 *
 	 * @param percent - the Luminance value between 0 - 100
@@ -104,7 +104,7 @@ class HSLColor {
 	}
 
 	/**
-	 * Create a RGB Color object based on this HSLColor with a different
+	 * Create an RGB Color object based on this HSLColor with a different
 	 * Saturation value. The percent specified is an absolute value.
 	 *
 	 * @param percent - the Saturation value between 0 - 100
@@ -115,7 +115,7 @@ class HSLColor {
 	}
 
 	/**
-	 * Create a RGB Color object based on this HSLColor with a different
+	 * Create an RGB Color object based on this HSLColor with a different
 	 * Shade. Changing the shade will return a darker color. The percent
 	 * specified is a relative value.
 	 *
@@ -129,7 +129,7 @@ class HSLColor {
 	}
 
 	/**
-	 * Create a RGB Color object based on this HSLColor with a different
+	 * Create an RGB Color object based on this HSLColor with a different
 	 * Tone. Changing the tone will return a lighter color. The percent
 	 * specified is a relative value.
 	 *
@@ -144,7 +144,7 @@ class HSLColor {
 
 	val complementary: Color
 		/**
-		 * Create a RGB Color object that is the complementary color of this
+		 * Create an RGB Color object that is the complementary color of this
 		 * HSLColor. This is a convenience method. The complementary color is
 		 * determined by adding 180 degrees to the Hue value.
 		 * @return the RGB Color object
@@ -226,7 +226,7 @@ class HSLColor {
 		 *
 		 * @param h Hue is specified as degrees in the range 0 - 360.
 		 * @param s Saturation is specified as a percentage in the range 1 - 100.
-		 * @param l Lumanance is specified as a percentage in the range 1 - 100.
+		 * @param l Luminance is specified as a percentage in the range 1 - 100.
 		 * @param alpha  the alpha value between 0 - 1
 		 *
 		 * @returns the RGB Color object
@@ -265,10 +265,10 @@ class HSLColor {
 			return Color(r, g, b, alpha)
 		}
 		/**
-		 * Convert HSL values to a RGB Color.
+		 * Convert HSL values to an RGB Color.
 		 * H (Hue) is specified as degrees in the range 0 - 360.
 		 * S (Saturation) is specified as a percentage in the range 1 - 100.
-		 * L (Lumanance) is specified as a percentage in the range 1 - 100.
+		 * L (Luminance) is specified as a percentage in the range 1 - 100.
 		 *
 		 * @param hsl    an array containing the 3 HSL values
 		 * @param alpha  the alpha value between 0 - 1

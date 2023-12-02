@@ -1,43 +1,43 @@
-@file:JvmName("PrintStreamwithFile")
+@file:JvmName("PrintStreamWithFile")
 package com.sterndu.util
 
 import java.io.*
 
-class PrintStreamwithFile : PrintStream {
+class PrintStreamWithFile : PrintStream {
 	private var bw: BufferedWriter? = null
 	private val f: File
 
-	constructor(file: File?, f: File) : super(file) {
+	constructor(file: File, f: File) : super(file) {
 		this.f = f
 		init()
 	}
 
-	constructor(file: File?, csn: String?, f: File) : super(file, csn) {
+	constructor(file: File, csn: String, f: File) : super(file, csn) {
 		this.f = f
 		init()
 	}
 
-	constructor(out: OutputStream?, autoFlush: Boolean, f: File) : super(out, autoFlush) {
+	constructor(out: OutputStream, autoFlush: Boolean, f: File) : super(out, autoFlush) {
 		this.f = f
 		init()
 	}
 
-	constructor(out: OutputStream?, autoFlush: Boolean, encoding: String?, f: File) : super(out, autoFlush, encoding) {
+	constructor(out: OutputStream, autoFlush: Boolean, encoding: String, f: File) : super(out, autoFlush, encoding) {
 		this.f = f
 		init()
 	}
 
-	constructor(out: OutputStream?, f: File) : super(out) {
+	constructor(out: OutputStream, f: File) : super(out) {
 		this.f = f
 		init()
 	}
 
-	constructor(str: String?, f: File) : super(str) {
+	constructor(str: String, f: File) : super(str) {
 		this.f = f
 		init()
 	}
 
-	constructor(fileName: String?, csn: String?, f: File) : super(fileName, csn) {
+	constructor(fileName: String, csn: String, f: File) : super(fileName, csn) {
 		this.f = f
 		init()
 	}
@@ -68,7 +68,7 @@ class PrintStreamwithFile : PrintStream {
 		}
 	}
 
-	override fun print(obj: Any) {
+	override fun print(obj: Any?) {
 		super.print(obj)
 		try {
 			bw!!.write("" + obj)
@@ -77,16 +77,16 @@ class PrintStreamwithFile : PrintStream {
 		}
 	}
 
-	override fun print(s: String) {
+	override fun print(s: String?) {
 		super.print(s)
 		try {
-			bw!!.write(s)
+			bw!!.write(s.toString())
 		} catch (e: IOException) {
 			e.printStackTrace()
 		}
 	}
 
-	override fun println(x: Any) {
+	override fun println(x: Any?) {
 		super.println(x)
 		try {
 			bw!!.newLine()
@@ -95,7 +95,7 @@ class PrintStreamwithFile : PrintStream {
 		}
 	}
 
-	override fun println(x: String) {
+	override fun println(x: String?) {
 		super.println(x)
 		try {
 			bw!!.newLine()

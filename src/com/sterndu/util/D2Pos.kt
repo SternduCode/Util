@@ -12,9 +12,8 @@ class D2Pos(var x: Double, var y: Double) {
 	override fun equals(obj: Any?): Boolean {
 		if (this === obj) return true
 		if (obj !is D2Pos) return false
-		val other = obj
-		return (java.lang.Double.doubleToLongBits(x) == java.lang.Double.doubleToLongBits(other.x)
-				&& java.lang.Double.doubleToLongBits(y) == java.lang.Double.doubleToLongBits(other.y))
+		return (java.lang.Double.doubleToLongBits(x) == java.lang.Double.doubleToLongBits(obj.x)  &&
+				java.lang.Double.doubleToLongBits(y) == java.lang.Double.doubleToLongBits(obj.y))
 	}
 
 	override fun hashCode(): Int {

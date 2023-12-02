@@ -1,15 +1,13 @@
 @file:JvmName("NumberDocument")
 package com.sterndu.util
 
-import javax.swing.text.AttributeSet
-import javax.swing.text.BadLocationException
-import javax.swing.text.PlainDocument
+import javax.swing.text.*
 
 class NumberDocument : PlainDocument() {
 	@Throws(BadLocationException::class)
 	override fun insertString(offs: Int, str: String, a: AttributeSet) {
 		var str = str
-		str = str.replace("[^\\d]".toRegex(), "")
+		str = str.replace(Regex("\\D"), "")
 		super.insertString(offs, str, a)
 	}
 

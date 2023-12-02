@@ -16,12 +16,9 @@ class D3Pos(var x: Double, var y: Double, var z: Double) {
 	override fun equals(obj: Any?): Boolean {
 		if (this === obj) return true
 		if (obj !is D3Pos) return false
-		val other = obj
-		return java.lang.Double.doubleToLongBits(x) == java.lang.Double.doubleToLongBits(other.x) && java.lang.Double.doubleToLongBits(
-			y
-		) == java.lang.Double.doubleToLongBits(other.y) && java.lang.Double.doubleToLongBits(z) == java.lang.Double.doubleToLongBits(
-			other.z
-		)
+		return java.lang.Double.doubleToLongBits(x) == java.lang.Double.doubleToLongBits(obj.x) &&
+				java.lang.Double.doubleToLongBits(y) == java.lang.Double.doubleToLongBits(obj.y) &&
+				java.lang.Double.doubleToLongBits(z) == java.lang.Double.doubleToLongBits(obj.z)
 	}
 
 	override fun hashCode(): Int {

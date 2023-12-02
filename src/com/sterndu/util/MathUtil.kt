@@ -7,16 +7,12 @@ import kotlin.math.roundToInt
 
 object MathUtil {
 	fun avg(o: Int, r: Int): Int {
-		var doi = o.toDouble()
-		doi += r.toDouble()
-		doi /= 2.0
-		return doi.roundToInt().toInt()
+		return intArrayOf(o, r).average().roundToInt()
 	}
 
-	fun factorial(x: Long): BigInteger {
-		var x = x
+	fun factorial(initialX: Long): BigInteger {
+		var x = abs(initialX)
 		var y = BigInteger.ONE
-		x = abs(x)
 		while (x > 1) {
 			y = y.multiply(BigInteger.valueOf(x))
 			x--

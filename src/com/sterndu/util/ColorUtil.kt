@@ -7,9 +7,9 @@ object ColorUtil {
 	@JvmOverloads
 	fun calculateColor(
 		bi: BufferedImage2, rgb: Int, r2: Int, g2: Int, b2: Int, a2: Int,
-		interpretzerovalasfirstwrite: Boolean = false
+		interpretZeroValueAsFirstWrite: Boolean = false
 	): Int {
-		return if ((bi.first || interpretzerovalasfirstwrite) && rgb == 0) {
+		return if ((bi.first || interpretZeroValueAsFirstWrite) && rgb == 0) {
 			Color(r2, g2, b2, a2).rgb
 		} else {
 			val o = Color(rgb)

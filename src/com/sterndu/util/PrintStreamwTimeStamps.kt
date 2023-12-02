@@ -1,20 +1,18 @@
-@file:JvmName("PrintStreamwTimeStamps")
+@file:JvmName("PrintStreamWithTimeStamps")
 package com.sterndu.util
 
-import java.io.File
-import java.io.OutputStream
-import java.io.PrintStream
+import java.io.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class PrintStreamwTimeStamps : PrintStream {
-	constructor(file: File?) : super(file)
-	constructor(file: File?, csn: String?) : super(file, csn)
-	constructor(out: OutputStream?) : super(out)
-	constructor(out: OutputStream?, autoFlush: Boolean) : super(out, autoFlush)
-	constructor(out: OutputStream?, autoFlush: Boolean, encoding: String?) : super(out, autoFlush, encoding)
-	constructor(fileName: String?) : super(fileName)
-	constructor(fileName: String?, csn: String?) : super(fileName, csn)
+class PrintStreamWithTimeStamps : PrintStream {
+	constructor(file: File) : super(file)
+	constructor(file: File, csn: String) : super(file, csn)
+	constructor(out: OutputStream) : super(out)
+	constructor(out: OutputStream, autoFlush: Boolean) : super(out, autoFlush)
+	constructor(out: OutputStream, autoFlush: Boolean, encoding: String) : super(out, autoFlush, encoding)
+	constructor(fileName: String) : super(fileName)
+	constructor(fileName: String, csn: String) : super(fileName, csn)
 
 	private val prefix: String
 		private get() {
