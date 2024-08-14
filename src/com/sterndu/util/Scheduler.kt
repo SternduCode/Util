@@ -4,29 +4,25 @@ package com.sterndu.util
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
+@Deprecated("Use MultiCore", ReplaceWith("OneTaskMultipleData","com.sterndu.multicore.*"), DeprecationLevel.WARNING)
 class Scheduler<K, E, O>(threads: Int, private val task: Task<E, O>) {
 	fun interface Task<in E, O> {
 		fun run(e: Array<out E>?): O
 	}
 
-	private val e_li: MutableList<Map.Entry<K, Array<out E>>>
-	private val res_map: MutableMap<K, O>
-	private val tg: ThreadGroup
-	private val threads: Array<Thread?>
-	private val ab: AtomicBoolean
+	private val e_li: MutableList<Pair<K, Array<out E>>> = LinkedList()
+	private val res_map: MutableMap<K, O> = HashMap()
+	private val tg: ThreadGroup = ThreadGroup("Task-Workers")
+	private val threads: Array<Thread?> = arrayOfNulls(threads)
+	private val ab: AtomicBoolean = AtomicBoolean(false)
 
 	init {
-		this.threads = arrayOfNulls(threads)
-		tg = ThreadGroup("Task-Workers")
-		ab = AtomicBoolean(false)
-		res_map = HashMap()
-		e_li = LinkedList()
 		val r = Runnable {
 			val s = this
 			val task = s.task
 			while (true) {
 				val data = s.getTask()
-				if (data != null) s.putResult(data.key, task.run(data.value)) else break
+				if (data != null) s.putResult(data.first, task.run(data.second)) else break
 				try {
 					Thread.sleep(2)
 				} catch (e: InterruptedException) {
@@ -41,7 +37,7 @@ class Scheduler<K, E, O>(threads: Int, private val task: Task<E, O>) {
 	}
 
 	@Synchronized
-	private fun getTask(): Map.Entry<K, Array<out E>>? {
+	private fun getTask(): Pair<K, Array<out E>>? {
 		do {
 			if (e_li.isNotEmpty()) {
 				val entry = e_li[0]
@@ -80,6 +76,6 @@ class Scheduler<K, E, O>(threads: Int, private val task: Task<E, O>) {
 	}
 
 	fun pushParams(obj: K, vararg e: E) {
-		if (!ab.get()) synchronized(e_li) { e_li.add(java.util.Map.entry(obj, e)) }
+		if (!ab.get()) synchronized(e_li) { e_li.add(obj to e) }
 	}
 }
