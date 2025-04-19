@@ -8,8 +8,9 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // -18 Length = 238 ß
-private const val ORACLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789=+-*/_#~!?([{}])'\\\"%&^<>|@ѬѭѪѫѨѩѦѧЫыФфБДЖЗИЛЦЧШЩЪЭЮЯ" +
-		"бвгджзилнтцbArrшщъэюяђљњѯѱѳΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω𐌀𐌁𐌂𐌃𐌄𐌅𐌆𐌇𐌉𐌊𐌋𐌌𐌍𐌏𐌐𐌒𐌓𐌔𐌕𐌖𐌗𐌈𐌎𐌑𐌘𐌙𐌚𐌛𐌜𐌝𐌞𐌠𐌡𐌢𐌣öäüÖÄÜ§$€°,;.:ß¥·↕ï←♀▬Ì▀ú↑Ç‼Â¯¶bûÎ"
+private const val ORACLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789=+-*/_#~!?([{}])'\\\"%&^<>|@ѬѭѪѫѨѩѦѧЫыФфБДЖЗИЛЦЧШЩЪЭЮЯбвг" +
+		"джзилнтцbArrшщъэюяђљњѯѱѳΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω𐌀𐌁𐌂𐌃𐌄𐌅𐌆𐌇𐌉𐌊𐌋𐌌𐌍𐌏𐌐𐌒𐌓𐌔𐌕𐌖𐌗𐌈𐌎𐌑𐌘𐌙𐌚𐌛𐌜𐌝𐌞𐌠𐌡𐌢𐌣ö" +
+		"äüÖÄÜ§$€°,;.:ß¥·↕ï←♀▬Ì▀ú↑Ç‼Â¯¶bûÎ"
 
 fun decode(string: String): ByteArray {
 	val bytes = ByteArray(string.length)
@@ -27,8 +28,8 @@ fun main() {
 	println(ORACLE.toCharArray().size)
 	println(ORACLE.toByteArray(Charsets.UTF_8).size)
 	for (c in ORACLE.toCharArray()) println(c)
-	val str = "FFS this is a log lorem ipsum dolore string...".toByteArray()
-	val ip = "12a02:0908:1a16:bd80:8928:31a3:5dc4:a4f72192.168.000.218361013".toByteArray()
+	"FFS this is a log lorem ipsum dolore string...".toByteArray()
+	"12a02:0908:1a16:bd80:8928:31a3:5dc4:a4f72192.168.000.218361013".toByteArray()
 	val baos = ByteArrayOutputStream()
 	try {
 		baos.write(1)

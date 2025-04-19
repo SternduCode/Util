@@ -11,16 +11,16 @@ import java.util.*
  * @param b the b
  * @return true, if successful
  */
-fun equals(a: List<*>, b: List<*>?): Boolean {
+fun equals(a: List<*>, b: List<*>): Boolean {
 	for (i in a.indices) {
-		val o = a[i]!!
-		val o2 = b!![i]!!
-		if (!equals(o, o2)) {
+		val o = a[i]
+		val o2 = b[i]
+		if (o?.let { equals(it, o2) } == false) {
 			println("$o $o2")
 			return false
 		}
 	}
-	for (i in b!!.indices) {
+	for (i in b.indices) {
 		val o = b[i]!!
 		val o2 = a[i]!!
 		if (!equals(o, o2)) {
@@ -38,7 +38,7 @@ fun equals(a: List<*>, b: List<*>?): Boolean {
  * @param b the b
  * @return true, if successful
  */
-fun equals(a: Map<*, *>, b: Map<*, *>?): Boolean {
+fun equals(a: Map<*, *>, b: Map<*, *>): Boolean {
 	var i: Iterator<*> = a.entries.iterator()
 	while (i.hasNext()) {
 		val (key, value) = i.next() as Map.Entry<*, *>
@@ -73,9 +73,9 @@ fun equals(a: Map<*, *>, b: Map<*, *>?): Boolean {
  * @param b the b
  * @return true, if successful
  */
-fun equals(a: Any, b: Any?): Boolean {
-	if (a is List<*>) return equals(a, b as List<*>?)
-	return if (a is Map<*, *>) equals(a, b as Map<*, *>?) else (a == b) and (b == a)
+fun equals(a: Any?, b: Any?): Boolean {
+	if (a is List<*>) return equals(a, b as? List<*>)
+	return if (a is Map<*, *>) equals(a, b as? Map<*, *>) else (a == b) and (b == a)
 }
 
 /**
