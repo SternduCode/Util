@@ -15,7 +15,7 @@ class PrintStreamWithTimeStamps : PrintStream {
 	constructor(fileName: String, csn: String) : super(fileName, csn)
 
 	private val prefix: String
-		private get() {
+		get() {
 			val ldt = LocalDateTime.now()
 			return "[" + ldt.format(DateTimeFormatter.ofPattern("HH:mm:ss.SSSS")) + "] "
 		}
