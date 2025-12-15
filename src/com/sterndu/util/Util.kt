@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
+import kotlin.math.exp
 
 /**
  * Equals.
@@ -50,7 +51,7 @@ fun equals(a: Map<*, *>, b: Map<*, *>): Boolean {
 				return false
 			}
 		} catch (e1: NullPointerException) {
-			System.err.println(value.toString() + " " + key + " " + b + " " + a)
+			System.err.println("$value $key $b $a")
 		}
 	}
 	i = b.entries.iterator()
@@ -62,7 +63,7 @@ fun equals(a: Map<*, *>, b: Map<*, *>): Boolean {
 				return false
 			}
 		} catch (e1: NullPointerException) {
-			System.err.println(value.toString() + " " + key + " " + a + " " + b)
+			System.err.println("$value $key $a $b")
 		}
 	}
 	return true
@@ -107,7 +108,7 @@ fun <E, T> MapToString(map: Map<E, T>, separator: Char): String {
 		sb.append(map[e].toString())
 		if (!c) sb.append("\"" + separator) else sb.append("'$separator")
 	}
-	if (sb.length > 0) sb.setLength(sb.length - 1)
+	if (sb.isNotEmpty()) sb.setLength(sb.length - 1)
 	return sb.toString()
 }
 /**
@@ -161,6 +162,6 @@ fun readXBytes(b: ByteArray, `is`: InputStream, amount: Int, timeout: Long = 100
  * @param x the x
  * @return the double
  */
-fun Sigmoid(x: Double?): Double {
-	return 1 / (1 + Math.exp(-x!!))
+fun Sigmoid(x: Double): Double {
+	return 1 / (1 + exp(-x))
 }
