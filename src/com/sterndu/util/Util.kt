@@ -1,7 +1,9 @@
 @file:JvmName("Util")
 package com.sterndu.util
 
-import java.io.*
+import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 /**
@@ -43,7 +45,7 @@ fun equals(a: Map<*, *>, b: Map<*, *>): Boolean {
 	while (i.hasNext()) {
 		val (key, value) = i.next() as Map.Entry<*, *>
 		try {
-			if (!equals(value!!, b!![key])) {
+			if (!equals(value!!, b[key])) {
 				println(value.toString() + " " + b[key])
 				return false
 			}
@@ -51,7 +53,7 @@ fun equals(a: Map<*, *>, b: Map<*, *>): Boolean {
 			System.err.println(value.toString() + " " + key + " " + b + " " + a)
 		}
 	}
-	i = b!!.entries.iterator()
+	i = b.entries.iterator()
 	while (i.hasNext()) {
 		val (key, value) = i.next()
 		try {
