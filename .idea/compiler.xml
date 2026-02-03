@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="25" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Util.main" options="--patch-module com.sterndu.Util=C:\Users\silas\IdeaProjects\Util\build\classes\java\main;C:\Users\silas\IdeaProjects\Util\build\classes\kotlin\main;C:\Users\silas\IdeaProjects\Util\build\resources\main" />
+    </option>
+  </component>
+</project>
